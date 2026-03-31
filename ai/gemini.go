@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/google/genai-go"
+	"google.golang.org/genai"
 )
 
 // GenerateIdeas calls the Gemini API to spawn new ideas based on a prompt
