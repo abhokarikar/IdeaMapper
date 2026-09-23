@@ -10,19 +10,19 @@ func CreateNote(n *models.Note) error {
 	if n.Level > 6 {
 		return fmt.Errorf("maximum note nesting level of 6 exceeded")
 	}
-	_, err := DB.Exec("INSERT INTO notes (id, parent_id, parent_type, level, title, description) VALUES (?, ?, ?, ?, ?, ?)",
+	_, err := DB.Exec("INSERT INTO metaData (id, parent_id, parent_type, level, title, description) VALUES (?, ?, ?, ?, ?, ?)",
 		n.ID, n.ParentID, n.ParentType, n.Level, n.Title, n.Description)
 	return err
 }
 
-func GetNotesForParent(parentID string, parentType string) ([]*models.Note, error) {
-	rows, err := DB.Query("SELECT id, parent_id, parent_type, level, title, description FROM notes WHERE parent_id = ? AND parent_type = ? ORDER BY created_at ASC", parentID, parentType)
+func GetMetaDataForParent(parentID string, parentType string) ([]*models.Note, error) {
+	rows, err := DB.Query("SELECT id, parent_id, parent_type, level, title, description FROM metaData WHERE parent_id = ? AND parent_type = ? ORDER BY created_at ASC", parentID, parentType)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var notes []*models.Note
+	var metaData []*models.Note
 	for rows.Next() {
 		n := &models.Note{}
 		if err := rows.Scan(&n.ID, &n.ParentID, &n.ParentType, &n.Level, &n.Title, &n.Description); err != nil {
@@ -46,21 +46,21 @@ func GetNotesForParent(parentID string, parentType string) ([]*models.Note, erro
 			attRows.Close()
 		}
 
-		// Recursively fetch subnotes if we are below max level
+		// Recursively fetch submetaData if we are below max level
 		if n.Level < 6 {
-			subNotes, err := GetNotesForParent(n.ID, "Note")
+			subMetaData, err := GetMetaDataForParent(n.ID, "Note")
 			if err != nil {
 				return nil, err
 			}
-			n.SubNotes = subNotes
+			n.SubMetaData = subMetaData
 		}
-		notes = append(notes, n)
+		metaData = append(metaData, n)
 	}
-	return notes, nil
+	return metaData, nil
 }
 
 func GetNoteByID(id string) (*models.Note, error) {
-	row := DB.QueryRow("SELECT id, parent_id, parent_type, level, title, description FROM notes WHERE id = ?", id)
+	row := DB.QueryRow("SELECT id, parent_id, parent_type, level, title, description FROM metaData WHERE id = ?", id)
 	n := &models.Note{}
 	if err := row.Scan(&n.ID, &n.ParentID, &n.ParentType, &n.Level, &n.Title, &n.Description); err != nil {
 		if err == sql.ErrNoRows {
@@ -72,8 +72,8 @@ func GetNoteByID(id string) (*models.Note, error) {
 }
 
 func DeleteNote(id string) error {
-	_, err := DB.Exec("DELETE FROM notes WHERE id = ?", id)
-	return err // Cascade triggers will automatically delete sub-notes and attachments
+	_, err := DB.Exec("DELETE FROM metaData WHERE id = ?", id)
+	return err // Cascade triggers will automatically delete sub-metaData and attachments
 }
 
 func AddAttachment(noteID, path string, isPhoto bool, attachID string) error {

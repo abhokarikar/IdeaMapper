@@ -24,9 +24,9 @@ func GetInterLinksForSource(sourceID string) ([]*models.InterLink, error) {
 			return nil, err
 		}
 		// A Link only supports 1 singular top-level Note attached directly to it.
-		notes, _ := GetNotesForParent(l.ID, "InterLink")
-		if len(notes) > 0 {
-			l.LinkNote = notes[0]
+		metaData, _ := GetMetaDataForParent(l.ID, "InterLink")
+		if len(metaData) > 0 {
+			l.LinkNote = metaData[0]
 		}
 		links = append(links, l)
 	}

@@ -41,7 +41,7 @@ func TestMainDB(t *testing.T) {
 		t.Errorf("Ideas table was dropped or compromised by SQL Injection")
 	}
 
-	// 4. Nested Notes Logic & Enforcement (Corner Cases)
+	// 4. Nested MetaData Logic & Enforcement (Corner Cases)
 	n1 := &models.Note{ID: models.NewID(), ParentID: idea.ID, ParentType: "Idea", Level: 1, Title: "L1"}
 	n2 := &models.Note{ID: models.NewID(), ParentID: n1.ID, ParentType: "Note", Level: 2, Title: "L2"}
 	n3 := &models.Note{ID: models.NewID(), ParentID: n2.ID, ParentType: "Note", Level: 3, Title: "L3"}
@@ -63,10 +63,10 @@ func TestMainDB(t *testing.T) {
 		t.Errorf("Unexpected error when testing Level 7 boundary: %v", err)
 	}
 
-	// Fetch Notes hierarchy (Smoke test recursion)
-	loadedNotes, err := GetNotesForParent(idea.ID, "Idea")
-	if err != nil || len(loadedNotes) == 0 {
-		t.Errorf("Failed to retrieve nested notes: %v", err)
+	// Fetch MetaData hierarchy (Smoke test recursion)
+	loadedMetaData, err := GetMetaDataForParent(idea.ID, "Idea")
+	if err != nil || len(loadedMetaData) == 0 {
+		t.Errorf("Failed to retrieve nested metaData: %v", err)
 	}
 	
 	// 5. Negative Test: NPEs and Nil data handling

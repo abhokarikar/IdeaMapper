@@ -27,9 +27,9 @@ func GenerateBackupBlob() ([]byte, error) {
 	var impIdeas []*models.Idea
 	for _, i := range ideas {
 		if i.IsImportant {
-			// Fetch its notes too
-			notes, _ := db.GetNotesForParent(i.ID, "Idea")
-			i.Notes = notes
+			// Fetch its metaData too
+			metaData, _ := db.GetMetaDataForParent(i.ID, "Idea")
+			i.MetaData = metaData
 			impIdeas = append(impIdeas, i)
 		}
 	}
@@ -37,8 +37,8 @@ func GenerateBackupBlob() ([]byte, error) {
 	var impMemories []*models.Memory
 	for _, m := range memories {
 		if m.IsImportant {
-			notes, _ := db.GetNotesForParent(m.ID, "Memory")
-			m.Notes = notes
+			metaData, _ := db.GetMetaDataForParent(m.ID, "Memory")
+			m.MetaData = metaData
 			impMemories = append(impMemories, m)
 		}
 	}

@@ -21,14 +21,6 @@ func BuildMainTabs(a fyne.App, w fyne.Window) fyne.CanvasObject {
 	return tabs
 }
 
-func BuildIdeasList(w fyne.Window) fyne.CanvasObject {
-	return container.NewCenter(widget.NewLabel("Ideas View Setup (In Progress)"))
-}
-
-func BuildMemoriesList(w fyne.Window) fyne.CanvasObject {
-	return container.NewCenter(widget.NewLabel("Memories View Setup (In Progress)"))
-}
-
 func BuildSettings(w fyne.Window) fyne.CanvasObject {
 	return container.NewCenter(widget.NewLabel("Settings (Google Drive Backup)"))
 }

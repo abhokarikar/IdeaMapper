@@ -50,7 +50,7 @@ func createTables() error {
 			name TEXT,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		);`,
-		`CREATE TABLE IF NOT EXISTS notes (
+		`CREATE TABLE IF NOT EXISTS metaData (
 			id TEXT PRIMARY KEY,
 			parent_id TEXT NOT NULL,
 			parent_type TEXT NOT NULL,
@@ -65,9 +65,9 @@ func createTables() error {
 			file_path TEXT NOT NULL,
 			is_photo BOOLEAN DEFAULT 0,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY(note_id) REFERENCES notes(id) ON DELETE CASCADE
+			FOREIGN KEY(note_id) REFERENCES metaData(id) ON DELETE CASCADE
 		);`,
-		`CREATE INDEX IF NOT EXISTS idx_notes_parent ON notes(parent_id);`,
+		`CREATE INDEX IF NOT EXISTS idx_metaData_parent ON metaData(parent_id);`,
 		`CREATE INDEX IF NOT EXISTS idx_interlinks_source ON interlinks(source_id);`,
 		`CREATE INDEX IF NOT EXISTS idx_interlinks_target ON interlinks(target_id);`,
 
@@ -75,22 +75,22 @@ func createTables() error {
 		`CREATE TRIGGER IF NOT EXISTS cascade_idea_delete
 		AFTER DELETE ON ideas
 		BEGIN
-			DELETE FROM notes WHERE parent_id = old.id AND parent_type = 'Idea';
+			DELETE FROM metaData WHERE parent_id = old.id AND parent_type = 'Idea';
 		END;`,
 		`CREATE TRIGGER IF NOT EXISTS cascade_memory_delete
 		AFTER DELETE ON memories
 		BEGIN
-			DELETE FROM notes WHERE parent_id = old.id AND parent_type = 'Memory';
+			DELETE FROM metaData WHERE parent_id = old.id AND parent_type = 'Memory';
 		END;`,
 		`CREATE TRIGGER IF NOT EXISTS cascade_interlink_delete
 		AFTER DELETE ON interlinks
 		BEGIN
-			DELETE FROM notes WHERE parent_id = old.id AND parent_type = 'InterLink';
+			DELETE FROM metaData WHERE parent_id = old.id AND parent_type = 'InterLink';
 		END;`,
 		`CREATE TRIGGER IF NOT EXISTS cascade_note_delete
-		AFTER DELETE ON notes
+		AFTER DELETE ON metaData
 		BEGIN
-			DELETE FROM notes WHERE parent_id = old.id AND parent_type = 'Note';
+			DELETE FROM metaData WHERE parent_id = old.id AND parent_type = 'Note';
 		END;`,
 	}
 

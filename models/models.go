@@ -8,7 +8,7 @@ type Idea struct {
 	Description string
 	IconPath    string
 	IsImportant bool
-	Notes       []*Note
+	MetaData       []*MetaData
 }
 
 type Memory struct {
@@ -17,7 +17,7 @@ type Memory struct {
 	Description string
 	Date        time.Time
 	IsImportant bool
-	Notes       []*Note
+	MetaData       []*MetaData
 }
 
 type InterLink struct {
@@ -27,17 +27,17 @@ type InterLink struct {
 	TargetID   string
 	TargetType string // "Idea" or "Memory"
 	Name       string
-	LinkNote   *Note  // Embedded Note specific to this link
+	LinkMetaData   *MetaData  // Embedded MetaData specific to this link
 }
 
-type Note struct {
+type MetaData struct {
 	ID          string
 	ParentID    string
-	ParentType  string // "Idea", "Memory", "InterLink", "Note"
+	ParentType  string // "Idea", "Memory", "InterLink", "MetaData"
 	Level       int
 	Title       string
 	Description string
 	FilePaths   []string
 	PhotoPaths  []string
-	SubNotes    []*Note
+	SubMetaData    []*MetaData
 }
